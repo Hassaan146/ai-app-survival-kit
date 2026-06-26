@@ -9,9 +9,10 @@ description: "23-area checklist for security and engineering quality in AI-gener
 
 A 23-area standard for anything an AI tool generates: code, APIs, backend services, or full apps. Use it to **generate code correctly the first time**, to **review/audit existing code**, or to **run a pre-deploy gate check**.
 
-The checklist is split into two parts:
+The checklist is split into three parts:
 - **Part 1 — Security (areas 1–13):** secrets, rate limiting, input validation, auth, SQL security, CORS, HTTP headers, file uploads, error handling, dependencies, XSS, deployment gate, AI/LLM-specific risks.
 - **Part 2 — Engineering & Product (areas 14–23):** architecture, scalability, cost management, testing, data integrity, UX/accessibility, maintainability, legal/compliance, operational readiness, AI-specific code reliability pitfalls.
+- **Part 3 — Architecture, Modularity & Documentation (every app):** the universal architecture, reusability, and documentation standard that applies to *any* app, plus the correct architecture per app type — frontend-only, backend-only, full-stack, AI/LLM apps, MCP servers, and forward-deployed apps.
 
 Full rule-by-rule detail — including the exact bullet checklist, code examples, and copy-paste prompts for each of the 23 areas — lives in `references/full-checklist.md`. **Read that file before doing a thorough review or generating a CLAUDE.md/.cursorrules file** — don't rely on memory of this summary for specifics.
 
@@ -56,6 +57,57 @@ Pull the "Drop-in prompt" blocks from `references/full-checklist.md` for the are
 | 21 | Legal / Privacy | Privacy policy. Data deletion flow. License checks. | GDPR/CCPA basics |
 | 22 | Operational Readiness | Monitoring, backups, rollback plan before launch. | Sentry, automated backups |
 | 23 | AI Code Reliability | Verify AI-used APIs exist. Check for deprecation. | Official docs review |
+
+## Part 3 — Architecture, Modularity & Documentation
+
+Security and the engineering checklist tell you *what not to ship*. This part tells you *how to shape the codebase* so it stays reviewable, reusable, and handoff-ready. Apply it to **every** app the AI generates — then layer the per-app-type rules on top.
+
+### The universal standard (applies to any app)
+
+**A. Architecture**
+- **Layered separation.** Keep presentation, business logic, and data access in distinct layers. Transport (HTTP/UI/CLI) lives at the edge and never leaks into business logic.
+- **Dependencies point inward.** UI/transport depends on logic; logic does not depend on UI/transport (ports & adapters / clean architecture). The core is framework-agnostic.
+- **One pattern per concern.** Pick one approach for state, one for data fetching, one for errors — don't mix three.
+- **Explicit boundaries.** Each module exposes a small public interface; internals stay private. Features compose modules, they don't reach into each other's guts.
+- **Config via environment, not code.** Twelve-factor: no hardcoded URLs, keys, or client-specific values.
+
+**B. Modularity & reusability**
+- **Single responsibility.** A function/component/module should do one thing and be nameable in one phrase. If you need "and" to describe it, split it.
+- **Extract on the second occurrence.** When logic appears twice, pull it into a shared unit (util, hook, service, middleware, package). Don't copy-paste.
+- **Composable primitives.** Build a small set of building blocks (UI components, hooks, repositories, middlewares) and assemble features from them rather than writing each feature top-to-bottom.
+- **Depend on interfaces, not implementations.** Abstract the swappable thing (DB, LLM provider, payment gateway) behind an interface so it can change without rippling through the codebase.
+- **No god-files.** Split anything mixing more than ~2 concerns or growing past a screenful of unrelated logic. Co-locate related files; use barrel/`index` exports for clean import paths.
+- **Separate data from presentation, and logic from view.** Content/config in data modules; reusable logic in hooks/services; views stay thin.
+
+**C. Documentation**
+- **README is mandatory:** what it is, how to run, scripts, required env vars, and a one-paragraph architecture overview.
+- **Necessary comments only.** Explain the non-obvious *why*, never the obvious *what*. Delete comments that restate code.
+- **Doc headers on modules/exports:** one line stating responsibility, plus inputs/outputs for non-trivial functions.
+- **`ARCHITECTURE.md` for non-trivial apps:** the request/render pipeline, a "where do I change X" folder map, and the system boundaries.
+- **Keep docs in sync with code.** Update docs in the *same commit* as the change — stale docs are worse than none.
+
+### Correct architecture by app type
+
+Pick the row that matches what you're building and apply its layering on top of the universal standard above.
+
+| App type | Layering (edge → core) | Must-haves |
+|---|---|---|
+| **Frontend-only** | routing → pages → feature components → reusable UI primitives → hooks (logic) → services (API client) → utils | Data/content separated from views; logic in hooks; one design-token source; route-level code-splitting; error boundary; client validation is UX-only (server re-validates) |
+| **Backend-only** | routes/controllers → services (business logic) → repositories (data access) → models | Thin controllers, fat services; validate every input at the boundary; ORM/parameterized only; cross-cutting concerns as middleware (auth, rate-limit, logging); pagination + transactions + indexes |
+| **Full-stack** | frontend layers ⟂ backend layers, joined by a typed contract | Single source of truth for the API shape (shared types / OpenAPI / schema package); shared code in a real boundary, not copy-paste; each unit independently deployable; auth + CORS + server-side validation end-to-end |
+| **AI / LLM app** | UI → app logic → **LLM service (provider behind an interface)** → provider SDK | Keys server-side only (browser hits *your* proxy); treat model output as untrusted (parse/validate/sanitize); token & cost caps (`max_tokens`, per-user budgets, caching, backoff); prompts versioned as assets + evals; pin model IDs; verify the SDK method actually exists |
+| **MCP server** | transport (stdio/HTTP) → tool registry → **individual tools** → domain logic | Each tool = one small, well-named function with a strict input schema and clear output contract; validate inputs (untrusted); least privilege; transport separate from tool logic (unit-testable); document each tool's purpose/args/side-effects; confirm destructive actions |
+| **Forward-deployed app** (on-prem / per-client / edge) | same artifact across clients; **differences only in config** | Configuration-first (zero hardcoded client specifics); reproducible builds + pinned deps; self-contained & offline-tolerant (vendor/self-host critical assets, degrade gracefully); handoff docs + ops runbook (install/upgrade/rollback); secrets via the client's store; backups + rollback plan before launch |
+
+**Notes on the trickier types**
+
+- **AI / LLM apps.** The single most common failure is calling the provider straight from the UI with a baked-in key. Always route through a server proxy, wrap the provider in one swappable `llm` service, and treat every model response as untrusted input — schema-validate it before you act on it or render it.
+- **MCP servers.** Think of each tool as a public API endpoint: strict input schema, least privilege, idempotent/safe where possible, and a clear error contract that never leaks internals. Keep the tool functions free of protocol code so they can be tested directly.
+- **Forward-deployed apps.** "Forward-deployed" means the app runs in *someone else's* environment, so portability and handoff beat cleverness. One configurable artifact, no phone-home without consent, and documentation an operator who has never met you can follow.
+
+### Quick gate (Part 3)
+
+Before calling any app "done", confirm: layered separation holds · no god-files / duplicated logic · interfaces abstract the swappable pieces · config is env-driven · README + (for non-trivial apps) ARCHITECTURE.md exist and match the code · comments explain *why*, not *what* · the per-app-type must-haves above are met.
 
 ## Reference files
 
