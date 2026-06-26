@@ -1,9 +1,20 @@
 ---
 name: vibe-coding-rules
-description: "23-area checklist for security and engineering quality in AI-generated ('vibe coded') apps. Use whenever writing, reviewing, auditing, or shipping code for a web app, API, or backend. Covers secrets, rate limiting, input validation, auth, SQL injection, CORS, security headers, file uploads, error handling, dependencies, XSS, and AI/LLM risks (prompt injection, token costs) -- plus non-security issues: architecture, scalability, cost management, testing, data integrity, UX/accessibility, maintainability, legal/compliance, operational readiness, and AI-specific reliability pitfalls (hallucinated APIs, deprecated patterns). Trigger whenever the user asks to review code for security or quality, asks 'is this safe to ship' or 'production ready', wants a pre-deploy checklist, is building an app/API/SaaS with AI help, or mentions vibe coding, code audit, security review, or technical debt."
+version: "1.1.0"
+description: >
+  23-area checklist for security and engineering quality in AI-generated apps.
+  Covers secrets, rate limiting, input validation, auth, SQL injection, CORS,
+  security headers, file uploads, error handling, dependencies, XSS, deploy
+  gates, AI/LLM risks, architecture, scalability, cost management, testing,
+  data integrity, UX/accessibility, maintainability, legal/compliance,
+  operational readiness, and AI-specific reliability pitfalls.
+triggers:
+  - user asks to review code for security or quality
+  - user asks "is this safe to ship" or "production ready"
+  - user wants a pre-deploy checklist
+  - user is building an app/API/SaaS with AI help
+  - user mentions vibe coding, code audit, security review, or technical debt
 ---
-
-
 
 # Vibe Coding Rules — Security & Engineering Checklist
 
@@ -12,23 +23,23 @@ A 23-area standard for anything an AI tool generates: code, APIs, backend servic
 The checklist is split into three parts:
 - **Part 1 — Security (areas 1–13):** secrets, rate limiting, input validation, auth, SQL security, CORS, HTTP headers, file uploads, error handling, dependencies, XSS, deployment gate, AI/LLM-specific risks.
 - **Part 2 — Engineering & Product (areas 14–23):** architecture, scalability, cost management, testing, data integrity, UX/accessibility, maintainability, legal/compliance, operational readiness, AI-specific code reliability pitfalls.
-- **Part 3 — Architecture, Modularity & Documentation (every app):** the universal architecture, reusability, and documentation standard that applies to *any* app, plus the correct architecture per app type — frontend-only, backend-only, full-stack, AI/LLM apps, MCP servers, and forward-deployed apps.
+- **Part 3 — Architecture, Modularity & Documentation (every app):** the universal architecture, reusability, and documentation standard that applies to *any* app, plus the correct architecture per app type.
 
-Full rule-by-rule detail — including the exact bullet checklist, code examples, and copy-paste prompts for each of the 23 areas — lives in `references/full-checklist.md`. **Read that file before doing a thorough review or generating a CLAUDE.md/.cursorrules file** — don't rely on memory of this summary for specifics.
+Full rule-by-rule detail — code examples and copy-paste prompts for all 23 areas — lives in `references/full-checklist.md`. Read that file before doing a thorough review or generating a `CLAUDE.md`/`.cursorrules` file. If that file is not present in the project, apply the rules below using the descriptions in this document.
 
 ## How to use this skill
 
 **When generating new code (a feature, an endpoint, a full app):**
-Apply the relevant rules from the Quick Reference table below proactively as you write — don't wait to be asked. At minimum: keep secrets out of frontend code, validate input server-side, use parameterized queries/ORM, rate-limit public endpoints, set security headers, and handle errors without leaking internals to the client. For anything beyond a trivial script, also apply the Part 2 basics: layered architecture, pagination on list endpoints, transactions on multi-step writes, and a README.
+Apply the relevant rules from the Quick Reference table below proactively as you write. Priority order: always apply areas 1, 9, 11 (secrets, error handling, XSS); apply areas 2–8 when there is a server endpoint; apply area 5 when there is a database; apply areas 13–23 for anything beyond a trivial script.
 
 **When reviewing or auditing existing code:**
-Open `references/full-checklist.md` and go through all 23 areas systematically against the codebase. Report findings grouped by area (Security findings first, then Engineering/Product), citing the specific rule violated and the fix. Don't just report security issues if asked for "all issues" — the user explicitly wants the non-security categories too (architecture, scalability, cost, testing, data integrity, UX, maintainability, legal, operational readiness, AI-reliability).
+Work through all 23 areas systematically. Report findings grouped by area (Security first, then Engineering/Product), citing the specific rule violated and the fix. Report non-security issues too — the user wants architecture, scalability, cost, testing, data integrity, UX, maintainability, legal, and operational findings, not just security.
 
 **When asked for a pre-deploy / "is this safe to ship" check:**
-Walk through the Quick Reference table below as a gate checklist. Call out anything unmet as a blocker (security items) vs. a recommendation (engineering/product items not strictly required to ship but risky to skip).
+Walk through the Quick Reference table as a gate checklist. Security items (areas 1–13) are **blockers**. Engineering/Product items (areas 14–23) are **strong recommendations**.
 
-**When asked to generate a `CLAUDE.md` or `.cursorrules` file for a project:**
-Pull the "Drop-in prompt" blocks from `references/full-checklist.md` for the areas relevant to that project's stack, and assemble them into the file. Don't just summarize — use the actual prompt language from the reference file, since it's written to be pasted directly into a rules file.
+**When asked to generate a `CLAUDE.md` or `.cursorrules` file:**
+Pull the "Drop-in prompt" blocks from `references/full-checklist.md` for the areas relevant to the project's stack and assemble them into the file.
 
 ## Quick Reference — All 23 Areas
 
@@ -45,7 +56,7 @@ Pull the "Drop-in prompt" blocks from `references/full-checklist.md` for the are
 | 9 | Error Handling | Generic messages to client. Full context in logs. | Sentry, Datadog, Logtail |
 | 10 | Dependencies | Audit after every install. Pin versions in production. | npm audit, pip-audit |
 | 11 | XSS | No `dangerouslySetInnerHTML`. No `eval()`. No inline scripts. | DOMPurify |
-| 12 | Deploy Gate | Run checklist before every ship. | See area 12 in reference |
+| 12 | Deploy Gate | Confirm: secrets out · prod env vars set · HTTPS+HSTS · security headers · CORS locked · rate limits on · server-side validation on · audit clean · generic errors · backups+rollback ready · monitoring on. Any unmet security item blocks the deploy. | Pre-ship checklist |
 | 13 | AI / LLM Security | Sanitize input. Server-side keys. Token budgets. | Server proxy, `max_tokens` |
 | 14 | Architecture | Layered structure. One pattern per concern. | Services, repositories |
 | 15 | Scalability | Design for 100x data. No N+1, paginate, index, cache. | Redis, DB indexes |
@@ -60,7 +71,7 @@ Pull the "Drop-in prompt" blocks from `references/full-checklist.md` for the are
 
 ## Part 3 — Architecture, Modularity & Documentation
 
-Security and the engineering checklist tell you *what not to ship*. This part tells you *how to shape the codebase* so it stays reviewable, reusable, and handoff-ready. Apply it to **every** app the AI generates — then layer the per-app-type rules on top.
+Security and the engineering checklist tell you *what not to ship*. This part tells you *how to shape the codebase* so it stays reviewable, reusable, and handoff-ready. Apply it to **every** app the AI generates.
 
 ### The universal standard (applies to any app)
 
@@ -88,11 +99,9 @@ Security and the engineering checklist tell you *what not to ship*. This part te
 
 ### Correct architecture by app type
 
-Pick the row that matches what you're building and apply its layering on top of the universal standard above.
-
 | App type | Layering (edge → core) | Must-haves |
 |---|---|---|
-| **Frontend-only** | routing → pages → feature components → reusable UI primitives → hooks (logic) → services (API client) → utils | Data/content separated from views; logic in hooks; one design-token source; route-level code-splitting; error boundary; client validation is UX-only (server re-validates) |
+| **Frontend-only** | routing → pages → feature components → reusable UI primitives → hooks (logic) → services (API client) → utils | Data/content separated from views; logic in hooks; one design-token source; route-level code-splitting; error boundary; client validation is UX-only (if a backend exists, it re-validates server-side) |
 | **Backend-only** | routes/controllers → services (business logic) → repositories (data access) → models | Thin controllers, fat services; validate every input at the boundary; ORM/parameterized only; cross-cutting concerns as middleware (auth, rate-limit, logging); pagination + transactions + indexes |
 | **Full-stack** | frontend layers ⟂ backend layers, joined by a typed contract | Single source of truth for the API shape (shared types / OpenAPI / schema package); shared code in a real boundary, not copy-paste; each unit independently deployable; auth + CORS + server-side validation end-to-end |
 | **AI / LLM app** | UI → app logic → **LLM service (provider behind an interface)** → provider SDK | Keys server-side only (browser hits *your* proxy); treat model output as untrusted (parse/validate/sanitize); token & cost caps (`max_tokens`, per-user budgets, caching, backoff); prompts versioned as assets + evals; pin model IDs; verify the SDK method actually exists |
@@ -105,12 +114,10 @@ Pick the row that matches what you're building and apply its layering on top of 
 - **MCP servers.** Think of each tool as a public API endpoint: strict input schema, least privilege, idempotent/safe where possible, and a clear error contract that never leaks internals. Keep the tool functions free of protocol code so they can be tested directly.
 - **Forward-deployed apps.** "Forward-deployed" means the app runs in *someone else's* environment, so portability and handoff beat cleverness. One configurable artifact, no phone-home without consent, and documentation an operator who has never met you can follow.
 
-### Quick gate (Part 3)
-
-Before calling any app "done", confirm: layered separation holds · no god-files / duplicated logic · interfaces abstract the swappable pieces · config is env-driven · README + (for non-trivial apps) ARCHITECTURE.md exist and match the code · comments explain *why*, not *what* · the per-app-type must-haves above are met.
-
 ## Reference files
 
-- `references/full-checklist.md` — the complete 23-area guide. Each area includes: the full bullet-point rule list, a short rationale, and either a code example (security areas 1–13) or a drop-in prompt for `CLAUDE.md`/`.cursorrules` (engineering areas 14–23). Load this whenever you need the specifics, not just the summary table above.
+- `references/full-checklist.md` — the complete 23-area guide with rule bullets, code examples, and drop-in prompts. Load this whenever you need specifics beyond the summary table above.
 
-Based on the security checklist by @tahajaffriii, expanded with engineering, product, and operational analysis.
+---
+
+Based on the security checklist by [@tahajaffriii](https://github.com/tahajaffriii), expanded with engineering, product, and operational analysis.

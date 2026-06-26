@@ -368,7 +368,7 @@ Apply the matching layering on top of the universal standard.
 
 | App type | Layering (edge → core) | Must-haves |
 |---|---|---|
-| **Frontend-only** | routing → pages → feature components → reusable UI primitives → hooks (logic) → services (API client) → utils | Data/content separated from views; logic in hooks; one design-token source; route-level code-splitting; error boundary; client validation is UX only (server re-validates) |
+| **Frontend-only** | routing → pages → feature components → reusable UI primitives → hooks (logic) → services (API client) → utils | Data/content separated from views; logic in hooks; one design-token source; route-level code-splitting; error boundary; client validation is UX only (if a backend exists, it re-validates server-side) |
 | **Backend-only** | routes/controllers → services → repositories → models | Thin controllers, fat services; validate every input at the boundary; ORM/parameterized only; cross-cutting concerns as middleware; pagination + transactions + indexes |
 | **Full-stack** | frontend layers ⟂ backend layers, joined by a typed contract | One source of truth for the API shape (shared types / OpenAPI / schema pkg); shared code in a real boundary, not copy-paste; independently deployable units; auth + CORS + server-side validation end-to-end |
 | **AI / LLM app** | UI → app logic → **LLM service (provider behind an interface)** → provider SDK | Keys server-side only (browser hits your proxy); model output is untrusted (parse/validate/sanitize); token & cost caps; prompts versioned as assets + evals; pin model IDs; verify the SDK method exists |

@@ -61,3 +61,7 @@ Example — destructive op:
 ## Boundaries
 
 Code/commits/PRs: write normal. "stop caveman" or "normal mode": revert. Level persist until changed or session end.
+
+---
+
+This skill implements the caveman communication pattern. The wenyan compression levels and Auto-Clarity guardrails were developed as part of this kit.

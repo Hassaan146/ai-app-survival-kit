@@ -1,0 +1,19 @@
+# macOS
+.DS_Store
+.AppleDouble
+.LSOverride
+
+# Windows
+Thumbs.db
+desktop.ini
+
+# Linux
+*~
+
+# Logs
+*.log
+
+# Secrets — never commit real env files
+.env
+.env.local
+.env.*.local

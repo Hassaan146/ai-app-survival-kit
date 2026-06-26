@@ -4,9 +4,29 @@ A practical starter kit for building AI-generated apps with fewer blind spots, l
 
 This repository includes two Claude Skills plus a PDF version of the app quality checklist:
 
-- `token-optimization.md`: a token optimization skill that can reduce conversational token usage by about 75%.
-- `vibe-coding-rules.md`: a 23-area checklist for security, engineering quality, product readiness, and AI-specific risks.
-- `Complete Rules for AI-Generated Apps.pdf`: a shareable PDF version of the AI-generated app checklist.
+- `token-optimization.md` — switches the AI into an ultra-compressed communication style, cutting token usage by roughly 75% without losing technical accuracy.
+- `vibe-coding-rules.md` — a 23-area checklist for security, engineering quality, product readiness, and AI-specific risks.
+- `references/full-checklist.md` — the full rule-by-rule detail (code examples + drop-in prompts) that `vibe-coding-rules.md` references.
+- `Complete Rules for AI-Generated Apps.pdf` — a shareable snapshot of the checklist. **Note:** the PDF is manually generated and may lag behind the markdown. The `.md` files are always the source of truth.
+
+## Quick Start
+
+### Claude Code (recommended)
+
+1. Copy `vibe-coding-rules.md` and `token-optimization.md` into your project's `.claude/skills/` folder (create it if it does not exist).
+2. Copy the entire `references/` folder into `.claude/skills/references/` so the full checklist is reachable.
+3. In Claude Code, type `/vibe-coding-rules` to trigger the checklist skill, or `/caveman` to activate token-compression mode.
+
+### Cursor / Windsurf / any `.cursorrules`-based tool
+
+1. Open `references/full-checklist.md`.
+2. Copy the **Drop-in prompt** blocks for the areas relevant to your project's stack.
+3. Paste them into your `.cursorrules` or `CLAUDE.md` file.
+4. The universal drop-in prompt at the end of Part 3 is a good starting point for any project.
+
+### Manual / team use
+
+Share `Complete Rules for AI-Generated Apps.pdf` for review sessions, onboarding, or pre-deploy gate checks. For the most current version, print from `references/full-checklist.md`.
 
 ## Token Optimization Skill
 
@@ -21,7 +41,7 @@ It works by switching the assistant into an ultra-compressed communication style
 - Supports multiple compression levels: `lite`, `full`, `ultra`, `wenyan-lite`, `wenyan-full`, and `wenyan-ultra`.
 - Automatically returns to clearer language for security warnings, irreversible actions, or complex steps where compression could cause confusion.
 
-In short: fluff gets removed, technical substance stays. That is how the skill can cut token usage by roughly 75% without losing the actual engineering value.
+In short: fluff gets removed, technical substance stays.
 
 ## Vibe Coding Rules Skill
 
@@ -30,8 +50,6 @@ The second skill is a 23-point checklist for the things AI coding tools often sk
 Instead of manually feeding these rules into an AI coding tool every time, the checklist is packaged as a Claude Skill. Attach it once, and every app you build can inherit the same security and engineering standard automatically.
 
 ### Security: 13 Areas
-
-The security checklist covers:
 
 1. Secrets management
 2. Rate limiting
@@ -45,11 +63,9 @@ The security checklist covers:
 10. Dependency audits
 11. XSS prevention
 12. Deployment gate checks
-13. AI/LLM-specific risks, including prompt injection and token-cost attacks
+13. AI/LLM-specific risks (prompt injection, token-cost attacks)
 
 ### Engineering & Product: 10 Areas
-
-The engineering and product checklist covers:
 
 1. Architecture
 2. Scalability
@@ -60,14 +76,7 @@ The engineering and product checklist covers:
 7. Maintainability
 8. Legal and compliance readiness
 9. Operational readiness
-10. AI-specific blind spots, including hallucinated APIs and deprecated patterns
-
-## How To Use
-
-1. Add the relevant skill file to your Claude Skills setup.
-2. Enable the skill when building, reviewing, or preparing to deploy an AI-generated app.
-3. Use the PDF when you want a portable checklist to review manually or share with a team.
-4. Reuse the skills across projects so security, cost, quality, and reliability checks are applied by default.
+10. AI-specific blind spots (hallucinated APIs, deprecated patterns)
 
 ## Files
 
@@ -75,10 +84,19 @@ The engineering and product checklist covers:
 | --- | --- |
 | `token-optimization.md` | Token compression skill for shorter, cheaper, high-signal AI responses |
 | `vibe-coding-rules.md` | 23-area production-readiness skill for AI-generated apps |
-| `Complete Rules for AI-Generated Apps.pdf` | PDF version of the checklist |
+| `references/full-checklist.md` | Full rule detail, code examples, and drop-in prompts for each area |
+| `Complete Rules for AI-Generated Apps.pdf` | Shareable snapshot of the checklist (may lag behind the markdown) |
 
 ## Why This Exists
 
 AI coding tools move fast, but they can quietly skip boring-but-critical production work: auth hardening, input validation, cost limits, tests, monitoring, accessibility, compliance, and API verification.
 
 This kit turns those checks into reusable workflow assets so every new AI-built app starts with better defaults.
+
+## Credits
+
+The security checklist (areas 1–13) is based on the original checklist by [@tahajaffriii](https://github.com/tahajaffriii), expanded with engineering, product, operational, and architecture analysis.
+
+## License
+
+MIT — see [LICENSE](LICENSE).
