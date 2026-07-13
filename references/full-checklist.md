@@ -219,4 +219,4 @@ Quick **STRIDE** pass before building a feature (Spoofing, Tampering, Repudiatio
 | 30 | CI/CD gates | lint+test+SAST+scan block | Semgrep, CodeQL |
 | 31 | Threat model+rollout | STRIDE, flags, canary, rollback | — |
 
-Original areas 1–13 © Taha Jaffri (@tahajaffriii). v2.0 expansion: areas 14–31 + depth on 1/4/10/13.
+Created by **Muhammad Hassaan ul Mustafa** (FAST-NUCES). Original areas 1–13 © Taha Jaffri (@tahajaffriii). v2.0 expansion: areas 14–31 + depth on 1/4/10/13.

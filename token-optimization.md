@@ -6,6 +6,7 @@ description: >
   wenyan-lite, wenyan-full, wenyan-ultra.
   Use when user says "caveman mode", "talk like caveman", "use caveman", "less tokens",
   "be brief", or invokes /caveman. Also auto-triggers when token efficiency is requested.
+author: "Muhammad Hassaan ul Mustafa (FAST-NUCES)"
 ---
 
 Respond terse like smart caveman. All technical substance stay. Only fluff die.
@@ -65,3 +66,5 @@ Code/commits/PRs: write normal. "stop caveman" or "normal mode": revert. Level p
 ---
 
 This skill implements the caveman communication pattern. The wenyan compression levels and Auto-Clarity guardrails were developed as part of this kit.
+
+Created by **Muhammad Hassaan ul Mustafa** (FAST-NUCES).

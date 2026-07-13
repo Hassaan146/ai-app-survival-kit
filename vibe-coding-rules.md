@@ -1,6 +1,7 @@
 ---
 name: vibe-coding-rules
 version: "2.0.0"
+author: "Muhammad Hassaan ul Mustafa (FAST-NUCES)"
 description: >
   31-area production-readiness standard for AI-generated apps, APIs, backends,
   agents, and MCP servers. Part 1 — Security (1–18): secrets+rotation, rate
@@ -148,4 +149,4 @@ Security and the engineering checklist tell you *what not to ship*. This part te
 
 ---
 
-Original security checklist (areas 1–13) by [@tahajaffriii](https://github.com/tahajaffriii). v2.0 production-readiness expansion: security areas 14–18, engineering areas 28/30/31, depth on 1/4/10/13, and the `references/full-checklist.md` reference.
+Created by **Muhammad Hassaan ul Mustafa** (FAST-NUCES). Original security checklist (areas 1–13) by [@tahajaffriii](https://github.com/tahajaffriii). v2.0 production-readiness expansion: security areas 14–18, engineering areas 28/30/31, depth on 1/4/10/13, and the `references/full-checklist.md` reference.

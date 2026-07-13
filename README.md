@@ -1,5 +1,7 @@
 # AI App Survival Kit
 
+**Created by Muhammad Hassaan ul Mustafa — FAST-NUCES (National University of Computer and Emerging Sciences).**
+
 A practical starter kit for building AI-generated apps with fewer blind spots, lower token waste, and a stronger production-readiness checklist.
 
 This repository includes two Claude Skills plus a PDF version of the app quality checklist:
@@ -101,10 +103,16 @@ AI coding tools move fast, but they can quietly skip boring-but-critical product
 
 This kit turns those checks into reusable workflow assets so every new AI-built app starts with better defaults.
 
+## Author
+
+**Muhammad Hassaan ul Mustafa**
+FAST-NUCES (National University of Computer and Emerging Sciences)
+GitHub: [@Hassaan146](https://github.com/Hassaan146)
+
 ## Credits
 
-The security checklist (areas 1–13) is based on the original checklist by [@tahajaffriii](https://github.com/tahajaffriii), expanded with engineering, product, operational, and architecture analysis.
+The security checklist (areas 1–13) is based on the original checklist by [@tahajaffriii](https://github.com/tahajaffriii), expanded, restructured, and extended with engineering, product, operational, and architecture analysis by Muhammad Hassaan ul Mustafa.
 
 ## License
 
-MIT — see [LICENSE](LICENSE).
+MIT © 2026 Muhammad Hassaan ul Mustafa — see [LICENSE](LICENSE).
