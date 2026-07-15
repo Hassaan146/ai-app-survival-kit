@@ -11,6 +11,17 @@ This repository includes two Claude Skills plus a PDF version of the app quality
 - `references/full-checklist.md` — the full rule-by-rule detail (code examples + drop-in prompts) that `vibe-coding-rules.md` references.
 - `Complete Rules for AI-Generated Apps.pdf` — a shareable snapshot of the checklist. **Note:** the PDF is manually generated and may lag behind the markdown. The `.md` files are always the source of truth.
 
+## Contents
+
+- [Quick Start](#quick-start)
+- [Token Optimization Skill](#token-optimization-skill)
+- [Vibe Coding Rules Skill](#vibe-coding-rules-skill)
+- [Files](#files)
+- [Why This Exists](#why-this-exists)
+- [Author](#author)
+- [Credits](#credits)
+- [License](#license)
+
 ## Quick Start
 
 ### Claude Code (recommended)
