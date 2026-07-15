@@ -1,5 +1,9 @@
 # AI App Survival Kit
 
+[![GitHub stars](https://img.shields.io/github/stars/Hassaan146/ai-app-survival-kit?style=flat)](https://github.com/Hassaan146/ai-app-survival-kit/stargazers)
+[![License: MIT](https://img.shields.io/badge/License-MIT-green.svg)](LICENSE)
+[![PRs Welcome](https://img.shields.io/badge/PRs-welcome-brightgreen.svg)](CONTRIBUTING.md)
+
 **Created by Muhammad Hassaan ul Mustafa — FAST-NUCES (National University of Computer and Emerging Sciences).**
 
 A practical starter kit for building AI-generated apps with fewer blind spots, lower token waste, and a stronger production-readiness checklist.
